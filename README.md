@@ -1,70 +1,134 @@
-# Getting Started with Create React App
+# 📊 Deep Learning Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A minimalistic, interactive dashboard for visualizing deep learning experiment results for Intel Image Classification.
 
-## Available Scripts
+![Dashboard Preview](https://img.shields.io/badge/React-19.2.5-blue) ![Recharts](https://img.shields.io/badge/Recharts-3.8.1-green) ![Status](https://img.shields.io/badge/Status-Ready%20to%20Deploy-success)
 
-In the project directory, you can run:
+## 🎨 Features
 
-### `npm start`
+- **Minimalistic Design**: Clean white background with professional Inter typography
+- **Colorful Visualizations**: Vibrant charts for easy data analysis
+- **60 ML Experiments**: Compare DNN, CNN, CNN+Augmentation, and Transfer Learning models
+- **6 Interactive Tabs**: 
+  - Overview - High-level KPIs and comparisons
+  - Model Analysis - DNN vs CNN vs CNN+Aug
+  - Transfer Learning - Frozen vs Unfrozen comparisons
+  - Metrics Deep Dive - Detailed performance metrics
+  - Dataset - Class distribution
+  - All Results - Complete experiment table
+- **Responsive**: Works on desktop, tablet, and mobile
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🚀 Quick Start
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Local Development
 
-### `npm test`
+```bash
+# Install dependencies
+npm install
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Start development server
+npm start
 
-### `npm run build`
+# Open http://localhost:3000
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Build for Production
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm run build
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 📦 Deploy to Vercel
 
-### `npm run eject`
+### Method 1: Automated Script (Windows)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+# Run the setup script
+setup-remote.bat
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Method 2: Manual Setup
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+**Step 1: Create GitHub Repository**
+1. Go to https://github.com/new
+2. Name: `dl-dashboard`
+3. Don't initialize with README
+4. Create repository
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+**Step 2: Push Code**
+```bash
+git remote add origin https://github.com/YOUR_USERNAME/dl-dashboard.git
+git push -u origin main
+```
 
-## Learn More
+**Step 3: Deploy on Vercel**
+1. Go to https://vercel.com
+2. Sign in with GitHub
+3. Click "Add New Project"
+4. Select your repository
+5. Click "Deploy"
+6. Done! 🎉
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Method 3: Vercel CLI
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+# Install Vercel CLI
+npm install -g vercel
 
-### Code Splitting
+# Login
+vercel login
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+# Deploy
+vercel
 
-### Analyzing the Bundle Size
+# Deploy to production
+vercel --prod
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 📚 Documentation
 
-### Making a Progressive Web App
+- **[QUICK_DEPLOY.md](QUICK_DEPLOY.md)** - Fast deployment guide
+- **[SETUP_GITHUB.md](SETUP_GITHUB.md)** - GitHub setup instructions
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Detailed deployment guide
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 🛠️ Tech Stack
 
-### Advanced Configuration
+- **React** 19.2.5 - UI framework
+- **Recharts** 3.8.1 - Data visualization
+- **Inter Font** - Typography
+- **Create React App** - Build tooling
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 📊 Data
 
-### Deployment
+The dashboard visualizes results from:
+- **Models**: DNN, CNN, CNN+Augmentation, ResNet50, MobileNetV2, VGG16, InceptionV3, DenseNet121
+- **Optimizers**: Adam, RMSprop, SGD
+- **Learning Rates**: 0.001, 0.01, 0.1
+- **Batch Sizes**: 16, 32
+- **Classes**: Buildings, Forest, Glacier, Mountain, Sea, Street
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🎯 Best Results
 
-### `npm run build` fails to minify
+- **Best Model**: MobileNetV2 (Frozen)
+- **Best Accuracy**: 89.1%
+- **Best F1 Score**: 0.8933
+- **Training**: Google Colab T4 GPU
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🤝 Contributing
+
+Feel free to fork this project and customize it for your own ML experiments!
+
+## 📝 License
+
+MIT License - feel free to use this dashboard for your projects.
+
+## 🙋 Support
+
+Having issues? Check out:
+- [Vercel Documentation](https://vercel.com/docs)
+- [React Documentation](https://react.dev)
+- [Recharts Documentation](https://recharts.org)
+
+---
+
+**Ready to deploy?** Follow the [QUICK_DEPLOY.md](QUICK_DEPLOY.md) guide!
