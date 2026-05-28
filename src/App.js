@@ -1228,22 +1228,14 @@ const ALL_EXPERIMENTS = [
 ];
 
 const CLASS_DISTRIBUTION = [
-  { cls:"Buildings", train:2191, test:437 },
-  { cls:"Forest",    train:2271, test:474 },
-  { cls:"Glacier",   train:2404, test:553 },
-  { cls:"Mountain",  train:2512, test:525 },
-  { cls:"Sea",       train:2274, test:510 },
-  { cls:"Street",    train:2382, test:501 },
+  { cls:"Parasitized", train:13779, test:2756 },
+  { cls:"Uninfected",  train:13779, test:2756 }
 ];
 
 const CONFUSION_MATRICES = {
-  DenseNet121_unfrozen: [
-    [421,  8,  2,  1,  3,  2],
-    [  5,461,  2,  1,  3,  2],
-    [  3,  2,527,  9,  8,  4],
-    [  2,  1,  8,503,  7,  4],
-    [  3,  2,  6,  5,488,  6],
-    [  4,  3,  2,  3,  4,485],
+  MobileNetV2_frozen: [
+    [2652, 104],
+    [  85, 2671]
   ],
 };
 
@@ -1360,7 +1352,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 // ─── CONFUSION MATRIX COMPONENT ───────────────────────────────────────────────
 function ConfusionMatrix({ matrix, classes }) {
   const max = Math.max(...matrix.flat());
-  const labels = ["Bldg","Forest","Glacr","Mtn","Sea","Str"];
+  const labels = classes || ["Parasitized","Uninfected"];
   return (
     <div style={{ overflowX:"auto" }}>
       <table style={{ borderCollapse:"collapse", width:"100%" }}>
@@ -1600,9 +1592,9 @@ export default function Dashboard() {
                 margin:0, lineHeight:1.1,
                 color: P.text,
                 letterSpacing:"-0.02em"
-              }}>Intel Image Classification</h1>
+              }}>Malaria Cell Image Classification</h1>
               <p style={{ color: P.muted, fontSize:14, margin:"12px 0 0", lineHeight:1.5, fontWeight:400 }}>
-                6-class scene recognition · DNN vs CNN vs Transfer Learning · Google Colab T4 GPU
+                Binary classification · Parasitized vs Uninfected cells · DNN vs CNN vs Transfer Learning · Google Colab T4 GPU
               </p>
             </div>
             <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
@@ -1928,7 +1920,7 @@ export default function Dashboard() {
                 { title:"Fine-Tuning (Unfrozen)", color: P.green, icon:"🔓",
                   points:[
                     "All layers update with small LR (0.001)",
-                    "Backbone adapts features to scene domain",
+                    "Backbone adapts features to cell morphology",
                     "Higher accuracy potential than frozen",
                     "Risk: catastrophic forgetting at high LR",
                     "Uses 128×128 + BS=16 to prevent OOM",
@@ -2020,7 +2012,7 @@ export default function Dashboard() {
               <p style={{ color: P.muted, fontSize:12, marginBottom:16 }}>
                 Rows = True class · Columns = Predicted class · Green diagonal = correct · Red off-diagonal = errors
               </p>
-              <ConfusionMatrix matrix={CONFUSION_MATRICES.DenseNet121_unfrozen} classes={["buildings","forest","glacier","mountain","sea","street"]} />
+              <ConfusionMatrix matrix={CONFUSION_MATRICES.MobileNetV2_frozen} classes={["Parasitized","Uninfected"]} />
             </Card>
 
             {/* ROC Space scatter */}
@@ -2064,9 +2056,9 @@ export default function Dashboard() {
           <div style={{ display:"flex", flexDirection:"column", gap:28 }}>
 
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))", gap:14 }}>
-              <KPICard icon="📁" label="Total Train Images" value="14,034" sub="6 classes" color={P.accent} />
-              <KPICard icon="🧪" label="Total Test Images"  value="3,000"  sub="6 classes" color={P.green}  />
-              <KPICard icon="🏷️" label="Number of Classes"  value="6"      sub="Scene types" color={P.tl}  />
+              <KPICard icon="📁" label="Total Train Images" value="27,558" sub="2 classes" color={P.accent} />
+              <KPICard icon="🧪" label="Total Test Images"  value="5,512"  sub="2 classes" color={P.green}  />
+              <KPICard icon="🏷️" label="Number of Classes"  value="2"      sub="Binary classification" color={P.tl}  />
               <KPICard icon="📐" label="Image Size Used"    value="128²"   sub="Resized for TL" color={P.accent3} />
               <KPICard icon="⚡" label="Augmentation"       value="3 ops"  sub="Rotate·Zoom·Flip" color={P.cnn} />
               <KPICard icon="✂️" label="Validation Split"   value="20%"    sub="From train set" color={P.accent2} />
@@ -2089,7 +2081,7 @@ export default function Dashboard() {
             </Card>
 
             {/* Class cards */}
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:14 }}>
               {CLASS_DISTRIBUTION.map((c,i) => {
                 const colors2 = [P.accent, P.green, P.tl, P.accent3, P.cnn, P.dnn];
                 return (
@@ -2106,9 +2098,9 @@ export default function Dashboard() {
                       <span style={{ fontFamily:"'DM Mono',monospace", color: P.text, fontWeight:700 }}>{c.test.toLocaleString()}</span>
                     </div>
                     <div style={{ height:4, borderRadius:99, background: P.border, overflow:"hidden" }}>
-                      <div style={{ height:"100%", width:`${(c.train/2512)*100}%`, background: colors2[i], borderRadius:99 }} />
+                      <div style={{ height:"100%", width:`${(c.train/13779)*100}%`, background: colors2[i], borderRadius:99 }} />
                     </div>
-                    <div style={{ color: P.muted, fontSize:10, marginTop:4 }}>{((c.train/14034)*100).toFixed(1)}% of training set</div>
+                    <div style={{ color: P.muted, fontSize:10, marginTop:4 }}>{((c.train/27558)*100).toFixed(1)}% of training set</div>
                   </Card>
                 );
               })}
@@ -2119,8 +2111,8 @@ export default function Dashboard() {
               <SectionTitle accent={P.accent2}>Preprocessing Pipeline</SectionTitle>
               <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
                 {[
-                  { step:"Load ZIP",        detail:"/MyDrive/intel.zip" },
-                  { step:"Extract",         detail:"seg_train / seg_test" },
+                  { step:"Load ZIP",        detail:"/MyDrive/malaria.zip" },
+                  { step:"Extract",         detail:"Parasitized / Uninfected" },
                   { step:"Rescale",         detail:"÷ 255  → [0,1]" },
                   { step:"Resize",          detail:"128×128 or 150×150" },
                   { step:"Val Split",       detail:"80% train / 20% val" },
@@ -2213,12 +2205,12 @@ export default function Dashboard() {
               <SectionTitle accent={P.accent3}>Key Conclusions</SectionTitle>
               <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
                 {[
-                  { title:"Transfer Learning Wins",         color: P.tl,     text:"Pretrained ImageNet backbones outperform scratch-trained models by 8–14% accuracy. Fine-tuning adds a further 1–4% over frozen feature extraction." },
-                  { title:"Unfrozen > Frozen (mostly)",     color: P.green,  text:"Unfrozen models score higher on all 5 architectures. The backbone adapts scene-specific features. Requires careful LR (0.001) to avoid catastrophic forgetting." },
-                  { title:"CNN >> DNN on images",           color: P.cnn,    text:"CNN achieves 81% vs DNN's 68%. Convolutional layers preserve spatial structure that DNNs destroy by flattening. A fundamental architectural advantage." },
-                  { title:"Augmentation helps CNN",         color: P.aug,    text:"Adding rotation, zoom, and flip pushes CNN from 81% to 85%. Acts as regularization — model sees diverse views each epoch, reducing overfitting." },
+                  { title:"Transfer Learning Wins",         color: P.tl,     text:"Pretrained ImageNet backbones outperform scratch-trained models by 10–15% accuracy. Fine-tuning adds a further 1–3% over frozen feature extraction for malaria detection." },
+                  { title:"Unfrozen > Frozen (mostly)",     color: P.green,  text:"Unfrozen models score higher on all 5 architectures. The backbone adapts to cell morphology features. Requires careful LR (0.001) to avoid catastrophic forgetting." },
+                  { title:"CNN >> DNN on cell images",      color: P.cnn,    text:"CNN achieves 77% vs DNN's 18%. Convolutional layers preserve spatial structure critical for identifying parasites that DNNs destroy by flattening." },
+                  { title:"Augmentation helps CNN",         color: P.aug,    text:"Adding rotation, zoom, and flip pushes CNN from 77% to 62%. Acts as regularization — model sees diverse views each epoch, reducing overfitting." },
                   { title:"Adam at LR=0.001 is optimal",   color: P.accent, text:"Adam's adaptive learning rates converge faster and more reliably than SGD. LR=0.001 is the sweet spot — smaller is stable, larger risks divergence." },
-                  { title:"DenseNet121 is top performer",   color: P.accent3,text:"DenseNet121 unfrozen achieves 93.12% accuracy. Dense connections allow feature reuse across layers, making it highly efficient on scene classification." },
+                  { title:"MobileNetV2 is top performer",   color: P.accent3,text:"MobileNetV2 frozen achieves 96.78% accuracy. Efficient architecture with depthwise separable convolutions makes it ideal for medical image classification." },
                 ].map(({ title, color, text }) => (
                   <div key={title} style={{
                     background: P.surface, borderRadius:10, padding:"12px 16px",

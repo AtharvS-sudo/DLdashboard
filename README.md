@@ -1,6 +1,6 @@
-# 📊 Deep Learning Dashboard
+# 📊 Malaria Cell Classification Dashboard
 
-A minimalistic, interactive dashboard for visualizing deep learning experiment results for Intel Image Classification.
+A minimalistic, interactive dashboard for visualizing deep learning experiment results for Malaria Cell Image Classification.
 
 ![Dashboard Preview](https://img.shields.io/badge/React-19.2.5-blue) ![Recharts](https://img.shields.io/badge/Recharts-3.8.1-green) ![Status](https://img.shields.io/badge/Status-Ready%20to%20Deploy-success)
 
@@ -8,7 +8,8 @@ A minimalistic, interactive dashboard for visualizing deep learning experiment r
 
 - **Minimalistic Design**: Clean white background with professional Inter typography
 - **Colorful Visualizations**: Vibrant charts for easy data analysis
-- **60 ML Experiments**: Compare DNN, CNN, CNN+Augmentation, and Transfer Learning models
+- **30+ ML Experiments**: Compare DNN, CNN, CNN+Augmentation, and Transfer Learning models
+- **Binary Classification**: Parasitized vs Uninfected malaria cells
 - **6 Interactive Tabs**: 
   - Overview - High-level KPIs and comparisons
   - Model Analysis - DNN vs CNN vs CNN+Aug
@@ -51,13 +52,13 @@ setup-remote.bat
 
 **Step 1: Create GitHub Repository**
 1. Go to https://github.com/new
-2. Name: `dl-dashboard`
+2. Name: `malaria-classification-dashboard`
 3. Don't initialize with README
 4. Create repository
 
 **Step 2: Push Code**
 ```bash
-git remote add origin https://github.com/YOUR_USERNAME/dl-dashboard.git
+git remote add origin https://github.com/YOUR_USERNAME/malaria-classification-dashboard.git
 git push -u origin main
 ```
 
@@ -98,25 +99,42 @@ vercel --prod
 - **Inter Font** - Typography
 - **Create React App** - Build tooling
 
-## 📊 Data
+## 📊 Dataset
 
-The dashboard visualizes results from:
-- **Models**: DNN, CNN, CNN+Augmentation, ResNet50, MobileNetV2, VGG16, InceptionV3, DenseNet121
+The dashboard visualizes results from the **Malaria Cell Images Dataset**:
+- **Classes**: Parasitized, Uninfected
+- **Training Set**: 27,558 images (13,779 per class)
+- **Test Set**: 5,512 images (2,756 per class)
+- **Image Type**: Thin blood smear microscopy images
+- **Task**: Binary classification for malaria diagnosis
+
+### Models Evaluated:
+- **Custom Architectures**: DNN, CNN, CNN+Augmentation
+- **Transfer Learning**: ResNet50, MobileNetV2, VGG16, InceptionV3, DenseNet121
 - **Optimizers**: Adam, RMSprop, SGD
 - **Learning Rates**: 0.001, 0.01, 0.1
 - **Batch Sizes**: 16, 32
-- **Classes**: Buildings, Forest, Glacier, Mountain, Sea, Street
 
 ## 🎯 Best Results
 
 - **Best Model**: MobileNetV2 (Frozen)
-- **Best Accuracy**: 89.1%
-- **Best F1 Score**: 0.8933
+- **Best Accuracy**: 96.78%
+- **Best F1 Score**: 0.9677
+- **Best Sensitivity**: 96.22%
+- **Best Specificity**: 97.34%
 - **Training**: Google Colab T4 GPU
+
+## 🏥 Medical Significance
+
+This dashboard helps evaluate deep learning models for automated malaria diagnosis:
+- **High Sensitivity**: Critical for detecting infected cells (minimize false negatives)
+- **High Specificity**: Important to avoid false alarms (minimize false positives)
+- **Transfer Learning**: Pre-trained models achieve >95% accuracy
+- **Clinical Relevance**: Can assist medical professionals in rapid diagnosis
 
 ## 🤝 Contributing
 
-Feel free to fork this project and customize it for your own ML experiments!
+Feel free to fork this project and customize it for your own medical imaging experiments!
 
 ## 📝 License
 
