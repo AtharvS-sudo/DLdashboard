@@ -1249,21 +1249,26 @@ const CONFUSION_MATRICES = {
 
 // ─── PALETTE ──────────────────────────────────────────────────────────────────
 const P = {
-  bg:       "#0a0e1a",
-  surface:  "#111827",
-  card:     "#151d2e",
-  border:   "#1e2d45",
-  accent:   "#00d4ff",
-  accent2:  "#7c3aed",
-  accent3:  "#f59e0b",
+  bg:       "#ffffff",
+  surface:  "#fafafa",
+  card:     "#ffffff",
+  border:   "#e5e5e5",
+  accent:   "#000000",
+  accent2:  "#404040",
+  accent3:  "#737373",
   green:    "#10b981",
   red:      "#ef4444",
-  text:     "#e2e8f0",
-  muted:    "#64748b",
-  dnn:      "#ef4444",
-  cnn:      "#3b82f6",
-  aug:      "#10b981",
-  tl:       "#a855f7",
+  text:     "#000000",
+  muted:    "#737373",
+  // Vibrant colors for charts
+  dnn:      "#ef4444",    // Red
+  cnn:      "#3b82f6",    // Blue
+  aug:      "#10b981",    // Green
+  tl:       "#8b5cf6",    // Purple
+  orange:   "#f59e0b",    // Orange
+  cyan:     "#06b6d4",    // Cyan
+  pink:     "#ec4899",    // Pink
+  yellow:   "#eab308",    // Yellow
 };
 
 const CAT_COLORS = {
@@ -1302,17 +1307,17 @@ function avgByCategory(data) {
 function KPICard({ label, value, sub, color, icon }) {
   return (
     <div style={{
-      background: P.card, border: `1px solid ${P.border}`,
-      borderRadius: 16, padding: "20px 24px",
-      borderTop: `3px solid ${color}`,
+      background: P.card, border: `2px solid ${P.border}`,
+      borderRadius: 4, padding: "20px 24px",
+      borderLeft: `4px solid ${color}`,
       display:"flex", flexDirection:"column", gap:6,
       minWidth:0,
     }}>
       <div style={{ display:"flex", alignItems:"center", gap:8 }}>
         <span style={{ fontSize:20 }}>{icon}</span>
-        <span style={{ color: P.muted, fontSize:11, letterSpacing:"0.1em", textTransform:"uppercase", fontFamily:"'DM Mono', monospace" }}>{label}</span>
+        <span style={{ color: P.muted, fontSize:10, letterSpacing:"0.1em", textTransform:"uppercase", fontFamily:"'Inter', sans-serif", fontWeight:500 }}>{label}</span>
       </div>
-      <div style={{ color, fontSize:32, fontWeight:800, fontFamily:"'Syne', sans-serif", lineHeight:1 }}>{value}</div>
+      <div style={{ color, fontSize:32, fontWeight:700, fontFamily:"'Inter', sans-serif", lineHeight:1 }}>{value}</div>
       {sub && <div style={{ color: P.muted, fontSize:11 }}>{sub}</div>}
     </div>
   );
@@ -1321,8 +1326,8 @@ function KPICard({ label, value, sub, color, icon }) {
 function SectionTitle({ children, accent = P.accent }) {
   return (
     <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
-      <div style={{ width:4, height:28, background:`linear-gradient(180deg, ${accent}, transparent)`, borderRadius:2 }}/>
-      <h2 style={{ color: P.text, fontSize:17, fontWeight:700, fontFamily:"'Syne', sans-serif", margin:0, letterSpacing:"0.02em" }}>{children}</h2>
+      <div style={{ width:3, height:24, background:accent, borderRadius:0 }}/>
+      <h2 style={{ color: P.text, fontSize:16, fontWeight:600, fontFamily:"'Inter', sans-serif", margin:0, letterSpacing:"-0.01em" }}>{children}</h2>
     </div>
   );
 }
@@ -1330,8 +1335,8 @@ function SectionTitle({ children, accent = P.accent }) {
 function Card({ children, style={} }) {
   return (
     <div style={{
-      background: P.card, border:`1px solid ${P.border}`,
-      borderRadius:16, padding:24, ...style
+      background: P.card, border:`2px solid ${P.border}`,
+      borderRadius:4, padding:24, ...style
     }}>
       {children}
     </div>
@@ -1341,11 +1346,11 @@ function Card({ children, style={} }) {
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div style={{ background:"#1e293b", border:`1px solid ${P.border}`, borderRadius:10, padding:"10px 14px" }}>
+    <div style={{ background:"#ffffff", border:`2px solid ${P.border}`, borderRadius:4, padding:"10px 14px", boxShadow:"0 4px 12px rgba(0,0,0,0.1)" }}>
       <p style={{ color: P.text, margin:0, fontSize:12, fontWeight:600, marginBottom:6 }}>{label}</p>
       {payload.map((p,i) => (
-        <p key={i} style={{ color: p.color, margin:"2px 0", fontSize:12 }}>
-          {p.name}: {fmt(p.value, 3)}
+        <p key={i} style={{ color: P.text, margin:"2px 0", fontSize:12 }}>
+          <span style={{ fontWeight:600 }}>{p.name}:</span> {fmt(p.value, 3)}
         </p>
       ))}
     </div>
@@ -1362,25 +1367,25 @@ function ConfusionMatrix({ matrix, classes }) {
         <thead>
           <tr>
             <th style={{ color: P.muted, fontSize:10, padding:"4px 6px" }}>True↓ Pred→</th>
-            {labels.map(l => <th key={l} style={{ color: P.accent, fontSize:10, padding:"4px 8px", fontFamily:"'DM Mono',monospace" }}>{l}</th>)}
+            {labels.map(l => <th key={l} style={{ color: P.accent, fontSize:10, padding:"4px 8px", fontFamily:"'Inter',sans-serif", fontWeight:600 }}>{l}</th>)}
           </tr>
         </thead>
         <tbody>
           {matrix.map((row, i) => (
             <tr key={i}>
-              <td style={{ color: P.accent, fontSize:10, padding:"4px 8px", fontFamily:"'DM Mono',monospace", fontWeight:700 }}>{labels[i]}</td>
+              <td style={{ color: P.accent, fontSize:10, padding:"4px 8px", fontFamily:"'Inter',sans-serif", fontWeight:600 }}>{labels[i]}</td>
               {row.map((val, j) => {
                 const intensity = val / max;
                 const isCorrect = i === j;
                 const bg = isCorrect
-                  ? `rgba(16,185,129,${0.15 + intensity * 0.7})`
-                  : `rgba(239,68,68,${intensity * 0.5})`;
+                  ? `rgba(16,185,129,${0.1 + intensity * 0.5})`
+                  : `rgba(239,68,68,${intensity * 0.3})`;
                 return (
                   <td key={j} style={{
-                    background: bg, color: intensity > 0.4 ? "#fff" : P.text,
+                    background: bg, color: intensity > 0.5 ? "#ffffff" : P.text,
                     fontSize:11, padding:"6px 10px", textAlign:"center",
-                    fontFamily:"'DM Mono',monospace", fontWeight: isCorrect ? 700 : 400,
-                    border:`1px solid ${P.border}`, borderRadius:4,
+                    fontFamily:"'Inter',sans-serif", fontWeight: isCorrect ? 600 : 400,
+                    border:`1px solid ${P.border}`, borderRadius:0,
                   }}>{val}</td>
                 );
               })}
@@ -1413,7 +1418,7 @@ function RadarComparison({ data }) {
         <PolarRadiusAxis angle={90} domain={[0,1]} tick={{ fill: P.muted, fontSize:8 }} />
         {Object.keys(best).map(cat => (
           <Radar key={cat} name={cat} dataKey={cat}
-            stroke={CAT_COLORS[cat]} fill={CAT_COLORS[cat]} fillOpacity={0.1}
+            stroke={CAT_COLORS[cat]} fill={CAT_COLORS[cat]} fillOpacity={0.15}
             strokeWidth={2} dot={{ fill: CAT_COLORS[cat], r:3 }}
           />
         ))}
@@ -1436,8 +1441,8 @@ function MetricsTable({ data }) {
             {cols.map(c => (
               <th key={c} style={{
                 color: P.accent, padding:"8px 12px", textAlign:"left",
-                borderBottom:`1px solid ${P.border}`, fontFamily:"'DM Mono',monospace",
-                fontSize:10, letterSpacing:"0.05em", whiteSpace:"nowrap"
+                borderBottom:`2px solid ${P.border}`, fontFamily:"'Inter',sans-serif",
+                fontSize:11, letterSpacing:"0", whiteSpace:"nowrap", fontWeight:600
               }}>{c}</th>
             ))}
           </tr>
@@ -1445,7 +1450,7 @@ function MetricsTable({ data }) {
         <tbody>
           {sorted.map((row, i) => (
             <tr key={i} style={{
-              background: i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.02)",
+              background: i % 2 === 0 ? "transparent" : P.surface,
               transition:"background 0.15s"
             }}>
               {cols.map(c => {
@@ -1454,22 +1459,24 @@ function MetricsTable({ data }) {
                 const isAcc = c === "Accuracy";
                 const isFPR = c === "FPR" || c === "FNR";
                 let color = P.text;
-                if (isNum && isAcc) color = val > 0.9 ? P.green : val > 0.8 ? P.accent3 : P.red;
-                if (isNum && isFPR) color = val < 0.08 ? P.green : val < 0.15 ? P.accent3 : P.red;
+                if (isNum && isAcc) color = val > 0.9 ? P.green : val > 0.8 ? P.orange : P.red;
+                if (isNum && isFPR) color = val < 0.08 ? P.green : val < 0.15 ? P.orange : P.red;
                 return (
                   <td key={c} style={{
                     padding:"7px 12px", color,
-                    borderBottom:`1px solid rgba(30,45,69,0.5)`,
-                    fontFamily: isNum ? "'DM Mono',monospace" : "inherit",
-                    fontWeight: isAcc ? 700 : 400,
-                    whiteSpace:"nowrap"
+                    borderBottom:`1px solid ${P.border}`,
+                    fontFamily: isNum ? "'Inter',sans-serif" : "inherit",
+                    fontWeight: isAcc ? 600 : 400,
+                    whiteSpace:"nowrap",
+                    fontSize:12
                   }}>
                     {c === "Category" ? (
                       <span style={{
-                        background:`${CAT_COLORS[val]}22`,
+                        background:`${CAT_COLORS[val]}15`,
                         color: CAT_COLORS[val],
-                        padding:"2px 8px", borderRadius:99, fontSize:10,
-                        border:`1px solid ${CAT_COLORS[val]}44`
+                        padding:"3px 10px", borderRadius:2, fontSize:11,
+                        border:`1px solid ${CAT_COLORS[val]}40`,
+                        fontWeight:600
                       }}>{val}</span>
                     ) : isNum ? fmt(val, 4) : val}
                   </td>
@@ -1548,57 +1555,53 @@ export default function Dashboard() {
   ];
 
   const tabStyle = (id) => ({
-    padding:"8px 18px", borderRadius:99, border:"none", cursor:"pointer",
-    fontFamily:"'DM Mono',monospace", fontSize:11, letterSpacing:"0.05em",
-    fontWeight: activeTab===id ? 700 : 400,
-    background: activeTab===id ? P.accent : "transparent",
-    color: activeTab===id ? P.bg : P.muted,
+    padding:"14px 20px", borderRadius:0, border:"none", cursor:"pointer",
+    fontFamily:"'Inter',sans-serif", fontSize:13, letterSpacing:"0",
+    fontWeight: activeTab===id ? 600 : 400,
+    background: "transparent",
+    color: activeTab===id ? P.accent : P.muted,
     transition:"all 0.2s",
+    borderBottom: activeTab===id ? `2px solid ${P.accent}` : "2px solid transparent",
   });
 
   return (
     <div style={{
       background: P.bg, minHeight:"100vh", color: P.text,
-      fontFamily:"'DM Sans', sans-serif",
+      fontFamily:"'Inter', sans-serif",
       padding:"0 0 60px 0",
     }}>
       {/* Google Fonts */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         * { box-sizing: border-box; }
-        ::-webkit-scrollbar { width:6px; height:6px; }
+        ::-webkit-scrollbar { width:8px; height:8px; }
         ::-webkit-scrollbar-track { background: ${P.surface}; }
-        ::-webkit-scrollbar-thumb { background: ${P.border}; border-radius:99px; }
-        tr:hover td { background: rgba(0,212,255,0.03) !important; }
+        ::-webkit-scrollbar-thumb { background: ${P.border}; border-radius:0; }
+        ::-webkit-scrollbar-thumb:hover { background: ${P.muted}; }
+        tr:hover td { background: rgba(0,0,0,0.02) !important; }
       `}</style>
 
       {/* ── HEADER ── */}
       <div style={{
-        background:`linear-gradient(135deg, ${P.surface} 0%, #0d1525 100%)`,
-        borderBottom:`1px solid ${P.border}`,
-        padding:"32px 40px 24px",
+        background:P.card,
+        borderBottom:`2px solid ${P.border}`,
+        padding:"40px 40px 32px",
         position:"relative", overflow:"hidden",
       }}>
-        {/* decorative grid */}
-        <div style={{
-          position:"absolute", inset:0, opacity:0.03,
-          backgroundImage:`linear-gradient(${P.accent} 1px, transparent 1px), linear-gradient(90deg, ${P.accent} 1px, transparent 1px)`,
-          backgroundSize:"40px 40px",
-        }}/>
         <div style={{ position:"relative", zIndex:1 }}>
           <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", flexWrap:"wrap", gap:16 }}>
             <div>
               <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:8 }}>
-                <div style={{ width:8, height:8, borderRadius:"50%", background: P.accent, boxShadow:`0 0 12px ${P.accent}` }}/>
-                <span style={{ color: P.accent, fontSize:11, fontFamily:"'DM Mono',monospace", letterSpacing:"0.15em" }}>DEEP LEARNING LAB</span>
+                <div style={{ width:6, height:6, borderRadius:"0", background: P.accent }}/>
+                <span style={{ color: P.muted, fontSize:10, fontFamily:"'Inter',sans-serif", letterSpacing:"0.1em", fontWeight:500 }}>DEEP LEARNING LAB</span>
               </div>
               <h1 style={{
-                fontFamily:"'Syne',sans-serif", fontSize:28, fontWeight:800,
+                fontFamily:"'Inter',sans-serif", fontSize:32, fontWeight:700,
                 margin:0, lineHeight:1.1,
-                background:`linear-gradient(135deg, ${P.text} 0%, ${P.accent} 100%)`,
-                WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
+                color: P.text,
+                letterSpacing:"-0.02em"
               }}>Intel Image Classification</h1>
-              <p style={{ color: P.muted, fontSize:13, margin:"8px 0 0", lineHeight:1.5 }}>
+              <p style={{ color: P.muted, fontSize:14, margin:"12px 0 0", lineHeight:1.5, fontWeight:400 }}>
                 6-class scene recognition · DNN vs CNN vs Transfer Learning · Google Colab T4 GPU
               </p>
             </div>
@@ -1609,11 +1612,11 @@ export default function Dashboard() {
                 { label:"Best Model", value:best.Model },
               ].map(({ label, value }) => (
                 <div key={label} style={{
-                  background:"rgba(0,212,255,0.07)", border:`1px solid ${P.accent}33`,
-                  borderRadius:12, padding:"12px 18px", textAlign:"center"
+                  background:P.surface, border:`2px solid ${P.border}`,
+                  borderRadius:4, padding:"12px 18px", textAlign:"center"
                 }}>
-                  <div style={{ color: P.accent, fontFamily:"'Syne',sans-serif", fontSize:20, fontWeight:800 }}>{value}</div>
-                  <div style={{ color: P.muted, fontSize:10, fontFamily:"'DM Mono',monospace", marginTop:2 }}>{label}</div>
+                  <div style={{ color: P.accent, fontFamily:"'Inter',sans-serif", fontSize:20, fontWeight:700 }}>{value}</div>
+                  <div style={{ color: P.muted, fontSize:10, fontFamily:"'Inter',sans-serif", marginTop:4, fontWeight:500 }}>{label}</div>
                 </div>
               ))}
             </div>
@@ -1623,8 +1626,8 @@ export default function Dashboard() {
 
       {/* ── TABS ── */}
       <div style={{
-        background: P.surface, borderBottom:`1px solid ${P.border}`,
-        padding:"12px 40px", display:"flex", gap:6, overflowX:"auto",
+        background: P.card, borderBottom:`2px solid ${P.border}`,
+        padding:"0 40px", display:"flex", gap:0, overflowX:"auto",
         position:"sticky", top:0, zIndex:100,
       }}>
         {TABS.map(t => (
@@ -1662,7 +1665,7 @@ export default function Dashboard() {
                     <XAxis dataKey="name" tick={{ fill: P.muted, fontSize:11 }} />
                     <YAxis domain={[0,1]} tick={{ fill: P.muted, fontSize:10 }} tickFormatter={v=>pct(v)} />
                     <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="Accuracy" radius={[6,6,0,0]} label={{ position:"top", fill: P.text, fontSize:10, formatter:v=>pct(v) }}>
+                    <Bar dataKey="Accuracy" radius={[0,0,0,0]} label={{ position:"top", fill: P.text, fontSize:10, formatter:v=>pct(v) }}>
                       {catBarData.map((c,i) => <Cell key={i} fill={CAT_COLORS[c.name] || P.tl} />)}
                     </Bar>
                   </BarChart>
@@ -1683,8 +1686,8 @@ export default function Dashboard() {
                   <XAxis type="number" domain={[0.6,1]} tick={{ fill: P.muted, fontSize:10 }} tickFormatter={v=>pct(v)} />
                   <YAxis type="category" dataKey="name" tick={{ fill: P.text, fontSize:10, fontFamily:"'DM Mono',monospace" }} width={80} />
                   <Tooltip content={<CustomTooltip />} formatter={v=>pct(v)} />
-                  <ReferenceLine x={avgAcc} stroke={P.accent3} strokeDasharray="4 4" label={{ value:"avg", fill: P.accent3, fontSize:9 }} />
-                  <Bar dataKey="acc" radius={[0,4,4,0]}>
+                  <ReferenceLine x={avgAcc} stroke={P.orange} strokeDasharray="4 4" label={{ value:"avg", fill: P.orange, fontSize:9 }} />
+                  <Bar dataKey="acc" radius={[0,0,0,0]}>
                     {rankedData.map((d,i) => <Cell key={i} fill={CAT_COLORS[d.cat] || P.tl} />)}
                   </Bar>
                 </BarChart>
@@ -1692,8 +1695,8 @@ export default function Dashboard() {
               <div style={{ display:"flex", gap:16, marginTop:12, flexWrap:"wrap" }}>
                 {Object.entries(CAT_COLORS).map(([cat,col]) => (
                   <div key={cat} style={{ display:"flex", alignItems:"center", gap:6 }}>
-                    <div style={{ width:10, height:10, borderRadius:2, background:col }}/>
-                    <span style={{ color: P.muted, fontSize:11 }}>{cat}</span>
+                    <div style={{ width:12, height:12, borderRadius:0, background:col, border:`1px solid ${P.border}` }}/>
+                    <span style={{ color: P.text, fontSize:12, fontWeight:500 }}>{cat}</span>
                   </div>
                 ))}
               </div>
@@ -1727,9 +1730,9 @@ export default function Dashboard() {
                         <YAxis domain={[0,1]} tick={{ fill: P.muted, fontSize:9 }} tickFormatter={v=>pct(v)} />
                         <Tooltip content={<CustomTooltip />} />
                         <Legend wrapperStyle={{ fontSize:11 }} />
-                        <Bar dataKey="DNN"     fill={P.dnn} radius={[3,3,0,0]} />
-                        <Bar dataKey="CNN"     fill={P.cnn} radius={[3,3,0,0]} />
-                        <Bar dataKey="CNN_AUG" fill={P.aug} radius={[3,3,0,0]} name="CNN+Aug" />
+                        <Bar dataKey="DNN"     fill={P.dnn} radius={[0,0,0,0]} />
+                        <Bar dataKey="CNN"     fill={P.cnn} radius={[0,0,0,0]} />
+                        <Bar dataKey="CNN_AUG" fill={P.aug} radius={[0,0,0,0]} name="CNN+Aug" />
                       </BarChart>
                     </ResponsiveContainer>
                   );
@@ -1754,9 +1757,9 @@ export default function Dashboard() {
                         <YAxis domain={[0,0.5]} tick={{ fill: P.muted, fontSize:9 }} tickFormatter={v=>pct(v)} />
                         <Tooltip content={<CustomTooltip />} />
                         <Legend wrapperStyle={{ fontSize:11 }} />
-                        <Bar dataKey="DNN"     fill={P.dnn} radius={[3,3,0,0]} />
-                        <Bar dataKey="CNN"     fill={P.cnn} radius={[3,3,0,0]} />
-                        <Bar dataKey="CNN_AUG" fill={P.aug} radius={[3,3,0,0]} name="CNN+Aug" />
+                        <Bar dataKey="DNN"     fill={P.dnn} radius={[0,0,0,0]} />
+                        <Bar dataKey="CNN"     fill={P.cnn} radius={[0,0,0,0]} />
+                        <Bar dataKey="CNN_AUG" fill={P.aug} radius={[0,0,0,0]} name="CNN+Aug" />
                       </BarChart>
                     </ResponsiveContainer>
                   );
@@ -1776,15 +1779,15 @@ export default function Dashboard() {
                     if (!active || !payload?.length) return null;
                     const d = payload[0]?.payload;
                     return (
-                      <div style={{ background:"#1e293b", border:`1px solid ${P.border}`, borderRadius:8, padding:"8px 12px" }}>
-                        <p style={{ color: CAT_COLORS[d?.cat], margin:0, fontWeight:700, fontSize:12 }}>{d?.model}</p>
+                      <div style={{ background:"#ffffff", border:`2px solid ${P.border}`, borderRadius:4, padding:"8px 12px", boxShadow:"0 4px 12px rgba(0,0,0,0.1)" }}>
+                        <p style={{ color: CAT_COLORS[d?.cat], margin:0, fontWeight:600, fontSize:12 }}>{d?.model}</p>
                         <p style={{ color: P.text, margin:"3px 0 0", fontSize:11 }}>Precision: {pct(d?.x)}</p>
                         <p style={{ color: P.text, margin:"2px 0 0", fontSize:11 }}>Recall: {pct(d?.y)}</p>
                       </div>
                     );
                   }} />
                   {Object.keys(CAT_COLORS).map(cat => (
-                    <Scatter key={cat} name={cat} data={scatterData.filter(d=>d.cat===cat)} fill={CAT_COLORS[cat]} opacity={0.85} r={6} />
+                    <Scatter key={cat} name={cat} data={scatterData.filter(d=>d.cat===cat)} fill={CAT_COLORS[cat]} opacity={0.8} r={6} />
                   ))}
                   <Legend wrapperStyle={{ fontSize:11 }} />
                 </ScatterChart>
@@ -1804,15 +1807,15 @@ export default function Dashboard() {
                   desc:"Same CNN architecture with rotation=30°, zoom=20%, horizontal flip. Augmentation acts as regularization — model sees different views each epoch.",
                   pros:"Better generalisation.", cons:"Slower training per epoch." },
               ].map(({ model, color, acc, desc, pros, cons }) => (
-                <Card key={model} style={{ borderTop:`3px solid ${color}` }}>
+                <Card key={model} style={{ borderLeft:`4px solid ${color}` }}>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
-                    <span style={{ fontFamily:"'Syne',sans-serif", fontWeight:800, fontSize:16, color }}>{model}</span>
-                    <span style={{ fontFamily:"'DM Mono',monospace", fontSize:18, fontWeight:700, color: P.green }}>{pct(acc || 0)}</span>
+                    <span style={{ fontFamily:"'Inter',sans-serif", fontWeight:600, fontSize:15, color }}>{model}</span>
+                    <span style={{ fontFamily:"'Inter',sans-serif", fontSize:18, fontWeight:700, color: P.accent }}>{pct(acc || 0)}</span>
                   </div>
-                  <p style={{ color: P.muted, fontSize:11, lineHeight:1.6, margin:"0 0 12px" }}>{desc}</p>
+                  <p style={{ color: P.muted, fontSize:12, lineHeight:1.6, margin:"0 0 12px" }}>{desc}</p>
                   <div style={{ display:"flex", flexDirection:"column", gap:4 }}>
-                    <div style={{ fontSize:11 }}><span style={{ color: P.green }}>✓ </span><span style={{ color: P.text }}>{pros}</span></div>
-                    <div style={{ fontSize:11 }}><span style={{ color: P.red }}>✗ </span><span style={{ color: P.text }}>{cons}</span></div>
+                    <div style={{ fontSize:11 }}><span style={{ color: P.green, fontWeight:600 }}>✓ </span><span style={{ color: P.text }}>{pros}</span></div>
+                    <div style={{ fontSize:11 }}><span style={{ color: P.red, fontWeight:600 }}>✗ </span><span style={{ color: P.text }}>{cons}</span></div>
                   </div>
                 </Card>
               ))}
@@ -1832,20 +1835,20 @@ export default function Dashboard() {
                 const uf = tlExps.find(d=>d.Model===m&&d.Frozen===false);
                 const better = (uf?.Accuracy||0) > (fr?.Accuracy||0) ? "Unfrozen" : "Frozen";
                 return (
-                  <Card key={m} style={{ borderTop:`3px solid ${P.tl}` }}>
-                    <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, color: P.tl, marginBottom:12 }}>{m}</div>
+                  <Card key={m} style={{ borderLeft:`4px solid ${P.tl}` }}>
+                    <div style={{ fontFamily:"'Inter',sans-serif", fontWeight:600, fontSize:13, color: P.tl, marginBottom:12 }}>{m}</div>
                     <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
                       <span style={{ color: P.muted, fontSize:11 }}>Frozen</span>
-                      <span style={{ color: P.accent, fontFamily:"'DM Mono',monospace", fontSize:13, fontWeight:700 }}>{pct(fr?.Accuracy||0)}</span>
+                      <span style={{ color: P.cnn, fontFamily:"'Inter',sans-serif", fontSize:13, fontWeight:600 }}>{pct(fr?.Accuracy||0)}</span>
                     </div>
                     <div style={{ display:"flex", justifyContent:"space-between", marginBottom:10 }}>
                       <span style={{ color: P.muted, fontSize:11 }}>Unfrozen</span>
-                      <span style={{ color: P.green, fontFamily:"'DM Mono',monospace", fontSize:13, fontWeight:700 }}>{pct(uf?.Accuracy||0)}</span>
+                      <span style={{ color: P.orange, fontFamily:"'Inter',sans-serif", fontSize:13, fontWeight:600 }}>{pct(uf?.Accuracy||0)}</span>
                     </div>
                     <div style={{
-                      background:`${P.green}22`, color: P.green,
-                      borderRadius:6, padding:"3px 8px", fontSize:10,
-                      border:`1px solid ${P.green}44`, textAlign:"center"
+                      background:`${P.green}15`, color: P.green,
+                      borderRadius:2, padding:"4px 8px", fontSize:10,
+                      border:`1px solid ${P.green}40`, textAlign:"center", fontWeight:600
                     }}>Winner: {better}</div>
                   </Card>
                 );
@@ -1862,8 +1865,8 @@ export default function Dashboard() {
                   <YAxis domain={[0.8,1]} tick={{ fill: P.muted, fontSize:10 }} tickFormatter={v=>pct(v)} />
                   <Tooltip content={<CustomTooltip />} formatter={v=>pct(v)} />
                   <Legend wrapperStyle={{ fontSize:11 }} />
-                  <Bar dataKey="Frozen"   fill={P.accent}  radius={[4,4,0,0]} label={{ position:"top", fill: P.text, fontSize:9, formatter:v=>pct(v) }} />
-                  <Bar dataKey="Unfrozen" fill={P.green}   radius={[4,4,0,0]} label={{ position:"top", fill: P.text, fontSize:9, formatter:v=>pct(v) }} />
+                  <Bar dataKey="Frozen"   fill={P.cnn}  radius={[0,0,0,0]} label={{ position:"top", fill: P.text, fontSize:9, formatter:v=>pct(v) }} />
+                  <Bar dataKey="Unfrozen" fill={P.orange}   radius={[0,0,0,0]} label={{ position:"top", fill: P.text, fontSize:9, formatter:v=>pct(v) }} />
                 </BarChart>
               </ResponsiveContainer>
             </Card>
@@ -1964,8 +1967,8 @@ export default function Dashboard() {
                     <XAxis dataKey="name" tick={{ fill: P.muted, fontSize:9 }} />
                     <YAxis domain={[0,1]} tick={{ fill: P.muted, fontSize:9 }} tickFormatter={v=>pct(v)} />
                     <Tooltip content={<CustomTooltip />} formatter={v=>pct(v)} />
-                    <Bar dataKey="value" radius={[4,4,0,0]} label={{ position:"top", fill: P.text, fontSize:9, formatter:v=>pct(v) }}>
-                      {metricsBarData.map((d,i) => <Cell key={i} fill={[P.green,P.accent,P.tl,P.accent3,P.cnn,P.dnn,P.green,P.accent][i]} />)}
+                    <Bar dataKey="value" radius={[0,0,0,0]} label={{ position:"top", fill: P.text, fontSize:9, formatter:v=>pct(v) }}>
+                      {metricsBarData.map((d,i) => <Cell key={i} fill={[P.green,P.cnn,P.tl,P.orange,P.cyan,P.dnn,P.pink,P.yellow][i]} />)}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
@@ -1979,7 +1982,7 @@ export default function Dashboard() {
                     <XAxis dataKey="name" tick={{ fill: P.muted, fontSize:12 }} />
                     <YAxis domain={[0,1]} tick={{ fill: P.muted, fontSize:9 }} tickFormatter={v=>pct(v)} />
                     <Tooltip content={<CustomTooltip />} formatter={v=>pct(v)} />
-                    <Bar dataKey="value" radius={[6,6,0,0]} label={{ position:"top", fill: P.text, fontSize:11, fontWeight:700, formatter:v=>pct(v) }}>
+                    <Bar dataKey="value" radius={[0,0,0,0]} label={{ position:"top", fill: P.text, fontSize:11, fontWeight:600, formatter:v=>pct(v) }}>
                       {rateBarData.map((d,i) => <Cell key={i} fill={d.fill} />)}
                     </Bar>
                   </BarChart>
@@ -2079,8 +2082,8 @@ export default function Dashboard() {
                   <YAxis tick={{ fill: P.muted, fontSize:10 }} />
                   <Tooltip content={<CustomTooltip />} />
                   <Legend wrapperStyle={{ fontSize:11 }} />
-                  <Bar dataKey="train" name="Train" fill={P.accent}  radius={[4,4,0,0]} label={{ position:"top", fill: P.text, fontSize:9 }} />
-                  <Bar dataKey="test"  name="Test"  fill={P.green}   radius={[4,4,0,0]} label={{ position:"top", fill: P.text, fontSize:9 }} />
+                  <Bar dataKey="train" name="Train" fill={P.cnn}  radius={[0,0,0,0]} label={{ position:"top", fill: P.text, fontSize:9 }} />
+                  <Bar dataKey="test"  name="Test"  fill={P.orange}   radius={[0,0,0,0]} label={{ position:"top", fill: P.text, fontSize:9 }} />
                 </BarChart>
               </ResponsiveContainer>
             </Card>
